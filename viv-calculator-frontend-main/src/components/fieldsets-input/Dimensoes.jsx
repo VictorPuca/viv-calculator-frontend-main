@@ -8,36 +8,31 @@ const Dimensoes = props => {
     const { state, setState } = useContext(DataContext);
 
     const [pipeType, setPipeType] = useState("Definido pelo usuário");
-    const [pipes, setPipes] = useState([]);
+    // pipes será um objeto com os dados dos pipes
+    const [pipes, setPipes] = useState({});
 
     useEffect(() => {
         // Fetch the data from the API
         fetch('http://localhost:8000/pipes')
-            .then(response => response.json())
+            .then(response => response.json()) 
             .then(data => {
-                // Verifica se 'pipes' está definido e é um array
-                if (data && Array.isArray(data.pipes)) {
-                    setPipes(data.pipes);
-                } else {
-                    console.error('Dados da API não estão no formato esperado:', data);
-                }
+                // get the data and set the state to working in handleselectchange
+                setPipes(data);
             })
-            .catch(error => console.error('Error fetching data:', error));
     }, []);
 
     const handleSelectChange = (e) => {
         const selectedPipe = e.target.value;
         setPipeType(selectedPipe);
+        console.log(selectedPipe)
 
         if (selectedPipe !== "Definido pelo usuário") {
-            const pipeData = pipes.find(pipe => pipe.pipe === selectedPipe);
-            if (pipeData) {
-                setState({
-                    ...state,
-                    d_s: pipeData.d_s,
-                    t_s: pipeData.t_s
-                });
-            }
+            setState({
+                ...state,
+                pipe: selectedPipe,
+                d_s: pipes[selectedPipe].d_s,
+                t_s: pipes[selectedPipe].t_s
+            });
         } else {
             setState({
                 ...state,
@@ -49,12 +44,10 @@ const Dimensoes = props => {
 
     return (
         <Fieldset name="Dimensões do duto">
-            <select className="form-select my-3" value={pipeType} onChange={handleSelectChange}>
+            <select className="form-select my-3" onChange={handleSelectChange}>
                 <option value="Definido pelo usuário">Definido pelo usuário</option>
-                {pipes.map(pipe => (
-                    <option key={pipe.pipe} value={pipe.pipe}>
-                        {pipe.pipe}
-                    </option>
+                {Object.keys(pipes).map(pipe => (
+                    <option key={pipe} value={pipe}>{pipe}</option>
                 ))}
             </select>
             <CampoDeEntrada
