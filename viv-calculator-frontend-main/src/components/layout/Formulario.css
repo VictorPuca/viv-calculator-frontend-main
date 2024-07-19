@@ -1,0 +1,36 @@
+form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.Fieldsets {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.btn {
+    width: 300px;
+    font-size: 1.1rem;
+}
+
+@media (max-width:1025px) {
+    body {
+        min-width: 800px;
+    }
+
+    .Fieldsets {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width:756px) {
+    body {
+        min-width: 500px;
+    }
+
+    .Fieldsets{
+        grid-template-columns: 1fr;
+    }
+}
